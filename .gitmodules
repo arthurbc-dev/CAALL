@@ -1,0 +1,6 @@
+[submodule "CAALL_BACK"]
+	path = CAALL_BACK
+	url = https://github.com/arthurbc-dev/CAALL_BACK
+[submodule "CAALL_FRONT"]
+	path = CAALL_FRONT
+	url = https://github.com/JoaoDelgado12/CAALL_FRONT
