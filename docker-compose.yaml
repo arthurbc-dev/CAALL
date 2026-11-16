@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: meu_banco
+    restart: always
+    environment:
+      POSTGRES_DB: meubanco
+      POSTGRES_USER: usuario
+      POSTGRES_PASSWORD: senha_segura
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - db-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U usuario -d meubanco"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: meu_backend
+    restart: always 
+    depends_on:
+      - db
+    networks:
+      - db-net
+      - back-net
+  frontend:
+    build:
+      context: ../CAALL_FRONT
+      dockerfile: Dockerfile
+    container_name: meu_frontend
+    restart: always
+    networks:
+      - front-net
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: meu_cloudflared
+    restart: always
+    command: tunnel run
+    environment:
+     TUNNEL_TOKEN: ${TUNNEL_TOKEN:?Defina o TUNNEL_TOKEN no arquivo .env}
+    networks:
+      - back-net
+      - front-net
+    depends_on: 
+        - backend
+networks:
+  db-net:
+    driver: bridge
+    internal: true
+  back-net:
+    driver: bridge
+  front-net:
+    driver: bridge
+
+volumes:
+  pgdata:
