@@ -20,7 +20,7 @@ services:
       retries: 10
   backend:
     build:
-      context: .
+      context: ./CAALL_BACK
       dockerfile: Dockerfile
     container_name: meu_backend
     restart: always 
@@ -31,7 +31,7 @@ services:
       - back-net
   frontend:
     build:
-      context: ../CAALL_FRONT
+      context: ./CAALL_FRONT
       dockerfile: Dockerfile
     container_name: meu_frontend
     restart: always
